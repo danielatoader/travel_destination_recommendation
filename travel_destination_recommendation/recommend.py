@@ -14,7 +14,7 @@ import numpy as np
 # user_satisfaction = city_db['user_satisfaction']
 
 
-def get_initial_user_score():
+def get_topics_user_score():
     """Collect initial user score"""
 
     print('''Rate on a scale of 0-10.
@@ -147,33 +147,6 @@ def get_user_city_ratings(nn_model, cities, user_score,
     user_coll[len(user_coll)] = user_dict
     # user_coll.insert_one(user_dict)
     return closest
-
-
-def make_recommendations(cities_df, nn_model, visited_cities=None):
-    """
-    Finds the five most recommended cities determined by user
-    input and previously visited cities
-    """
-    if visited_cities is None:
-        visited_cities = []
-
-    user_score = get_initial_user_score()
-    print('''For the following locations give:
-            \t1 if you have visited and liked
-            \t-1 if you have visited and disliked
-            \t0 if you have never been''')
-
-    user_dict = dict()
-    closest = get_user_city_ratings(nn_model, cities_df,
-                                    user_score, visited_cities, user_dict)
-    user_df = pd.DataFrame(user_dict)
-    # swap the columns with indexes
-    user_df = user_df.transpose()
-
-    pickle.dump(user_df, open('data/user_df.pkl', 'wb'))
-
-    return closest[0:5]
-
 
 def rate_recs(recommendations):
     """
