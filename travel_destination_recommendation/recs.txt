@@ -1,0 +1,2 @@
+[(('Isle of Skye', 'Scotland'), 0.2362711632753897), (('Mani Peninsula', 'Greece'), 0.24277129525607893), (('St Petersburg', 'Russia'), 0.2434079627088372), (('Copenhagen', 'Denmark'), 0.24356941902062124), (('Ephesus', 'Turkey'), 0.24415270722570145)]
+[(('Isle of Skye', 'Scotland'), 0.300258915828534), (('St Petersburg', 'Russia'), 0.30365545098154634), (('Rhine Valley', 'Germany'), 0.30420915189639486), (('Ephesus', 'Turkey'), 0.3043844669726155), (('Kardamyli', 'Greece'), 0.30488772372637485)]

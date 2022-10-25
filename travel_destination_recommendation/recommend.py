@@ -1,20 +1,6 @@
-from sklearn.neighbors import NearestNeighbors
-import pickle
-import pandas as pd
 import numpy as np
-import pymongo
 
-# Connect to MongoDB Atlas Database
-with open('.secrets/password.txt', 'r') as f:
-    conn_string = f.read().strip()
-
-mc = pymongo.MongoClient(conn_string)
-city_db = mc['city_database']
-user_coll = city_db['user_collection']
-user_satisfaction = city_db['user_satisfaction']
-
-
-def get_initial_user_score():
+def get_topics_user_score():
     """Collect initial user score"""
 
     print('''Rate on a scale of 0-10.
@@ -118,13 +104,13 @@ def get_updated_n_recommendation(user_score, cities, random_recs,
 
 
 def get_user_city_ratings(nn_model, cities, user_score,
-                          visited):
+                          visited, user_coll):
     """
     Asks user to rate 10 random cities.
     User Input Meanings:
-        1 - visited and liked
+        1  - visited and liked
         -1 - visited and disliked
-        0 - has not visited
+        0  - has not visited
     """
     closest = recommend_nn(nn_model, cities, user_score)
     user_dict = {}
@@ -144,28 +130,16 @@ def get_user_city_ratings(nn_model, cities, user_score,
                                            random_recs, nn_model,
                                            city_ratings, visited)
 
-    user_coll.insert_one(user_dict)
+    user_coll[len(user_coll)] = user_dict
+
+    # user_coll.insert_one(user_dict)
+
+    # user_df = pd.DataFrame(user_dict)
+    # swap the columns with indexes
+    # user_df = user_df.transpose()
+    # pickle.dump(user_df, open('../data/user_df.pkl', 'wb'))
+
     return closest
-
-
-def make_recommendations(cities_df, nn_model, visited_cities=None):
-    """
-    Finds the five most recommended cities determined by user
-    input and previously visited cities
-    """
-    if visited_cities is None:
-        visited_cities = []
-
-    user_score = get_initial_user_score()
-    print('''For the following locations give:
-            \t1 if you have visited and liked
-            \t-1 if you have visited and disliked
-            \t0 if you have never been''')
-
-    closest = get_user_city_ratings(nn_model, cities_df,
-                                    user_score, visited_cities)
-    return closest[0:5]
-
 
 def rate_recs(recommendations):
     """
@@ -176,4 +150,4 @@ def rate_recs(recommendations):
     for rec in recommendations:
         interest.append(int(input(str(rec[0]) + ': ')))
     satisfaction = {'satisfaction_score': sum(interest) / 5}
-    user_satisfaction.insert_one(satisfaction)
+    # user_satisfaction.insert_one(satisfaction)
